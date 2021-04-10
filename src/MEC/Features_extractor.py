@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 
-class Extrator_Caracteristicas(object):
+class Features_Extractor(object):
     def __init__(self, pathImg):
         self.pathImg = pathImg
 
@@ -39,7 +39,7 @@ class Extrator_Caracteristicas(object):
         cY = int(moments["m01"] / moments["m00"])
         return (cX, cY)
 
-    def findDescriptors(self, binaryImg, rows, cols):
+    def findBinaryPixels(self, binaryImg, rows, cols):
         binaryPixels = 0
         for i in range(rows):
             for j in range(cols):
@@ -90,13 +90,13 @@ class Extrator_Caracteristicas(object):
         for i in range(rows):
             for j in range(cols):
                 (b, g, r) = imageBGR[i, j]
-                blueVariance += (b - blueMean)**2 * binaryImg[i, j]
-                greenVariance += (g - greenMean)**2 * binaryImg[i, j]
-                redMean += (r - redMean)**2 * binaryImg[i, j]
+                blueVariance += (int(b) - blueMean)**2 * int(binaryImg[i, j])
+                greenVariance += (int(g) - greenMean)**2 * int(binaryImg[i, j])
+                redVariance += (int(r) - redMean)**2 * int(binaryImg[i, j])
         blueVariance = (1/binaryPixels) * blueVariance
         greenVariance = (1/binaryPixels) * greenVariance
         redVariance = (1/binaryPixels) * redVariance
-        return (blueVariance, greenVariance, redMean)
+        return (blueVariance, greenVariance, redVariance)
 
     def showSingleImg(self, img, barText):
         cv2.imshow(barText, img)
@@ -114,7 +114,7 @@ class Extrator_Caracteristicas(object):
         cv2.waitKey(0)
 
     def drawCircle(self, img, coordinates, radius):
-        return cv2.circle(img, int(coordinates), int(radius), (0, 255, 0), 3)
+        return cv2.circle(img, coordinates, int(radius), (0, 255, 0), 3)
 
     def drawContours(self, img, coordinates, index):
         return cv2.drawContours(img, coordinates, index, (0, 255, 0), 3)
