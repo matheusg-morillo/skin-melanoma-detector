@@ -2,14 +2,15 @@ import cv2
 
 
 class PreProcessing_Module(object):
-    def __init__(self, pathImg):
-        self.pathImg = pathImg
 
-    def openImg(self):
-        return cv2.imread(self.pathImg)
+    def openImg(self, pathImg):
+        return cv2.imread(pathImg)
 
     def bgr2Gray(self, imageBgr):
         return cv2.cvtColor(imageBgr, cv2.COLOR_BGR2GRAY)
+
+    def equalizeImg(self, imgGray):
+        return cv2.equalizeHist(imgGray)
 
     def gaussianBlur(self, imgGray, gaussianValue):
         return cv2.GaussianBlur(imgGray, gaussianValue, 0)
