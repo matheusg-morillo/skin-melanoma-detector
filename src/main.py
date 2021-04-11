@@ -1,18 +1,20 @@
-from Features_extractor import Features_Extractor
+from MEC import Features_extractor
+from MPP import Pre_Processing_Module
 
 
 def main():
-    mec = Features_Extractor(
+    mpp = Pre_Processing_Module.PreProcessing_Module(
         r'C:\Users\rapha\Documents\ISIC-download\ISIC_0000001.jpg')
+    mec = Features_extractor.Features_Extractor()
 
     descriptors = []
 
-    imgMask = imgBGR = mec.openImg()
-    grayImg = mec.bgr2Gray(imgMask)
-    gaussianBlurImg = mec.gaussianBlur(grayImg, (7, 7))
-    (T, binaryImg) = mec.binaryImg(gaussianBlurImg, 120, 255)
-    binaryImg = mec.morphologyClose(binaryImg)
-    borderedImg = mec.canny(binaryImg)
+    imgMask = imgBGR = mpp.openImg()
+    grayImg = mpp.bgr2Gray(imgMask)
+    gaussianBlurImg = mpp.gaussianBlur(grayImg, (7, 7))
+    (T, binaryImg) = mpp.binaryImg(gaussianBlurImg, 120, 255)
+    binaryImg = mpp.morphologyClose(binaryImg)
+    borderedImg = mpp.canny(binaryImg)
     contours, hierarchy = mec.findContours(borderedImg)
     moments = mec.findMoments(borderedImg)
     (cX, cY) = mec.findCenterOfMass(moments)
