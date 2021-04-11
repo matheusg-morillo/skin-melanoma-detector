@@ -4,7 +4,7 @@ import cv2
 class PreProcessing_Module(object):
 
     def openImg(self, pathImg):
-        return cv2.imread(pathImg)
+        return cv2.imread(pathImg, cv2.IMREAD_UNCHANGED)
 
     def bgr2Gray(self, imageBgr):
         return cv2.cvtColor(imageBgr, cv2.COLOR_BGR2GRAY)

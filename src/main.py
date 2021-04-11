@@ -2,7 +2,6 @@ from MEC import Features_extractor
 from MPP import Pre_Processing_Module
 from Data import Data_Extrator
 import os
-import sys
 
 
 def main():
@@ -11,24 +10,27 @@ def main():
     data = Data_Extrator.Data_Extrator(
         r'C:\Users\rapha\Documents\skin-melanoma-detector\src\Data\\')
 
-    path = r'C:\Users\rapha\Documents\ISIC-download'
+    pathSegmentation = r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation'
+    pathImgBGR = r'C:\Users\rapha\Documents\ISIC-download'
     descriptors = []
     index = 0
-    initialValue = 125
-    blur = (9, 9)
 
-    for arquivo in os.listdir(path):
-        imgMask = imgBGR = mpp.openImg(path + '\\' + str(arquivo))
-        grayImg = mpp.bgr2Gray(imgMask)
+    for arquivo in os.listdir(
+            r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation'):
+        nameImg = arquivo.split('.')
+        binaryImg = mpp.openImg(
+            pathSegmentation + '\\' + str(nameImg[0]) + '.png')
+        imgBGR = mpp.openImg(pathImgBGR + '\\' + str(nameImg[0]) + '.jpg')
+        # grayImg = mpp.bgr2Gray(binaryImg)
         # grayImg = mpp.equalizeImg(grayImg)
-        gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
-        (T, binaryImg) = mpp.binaryImg(gaussianBlurImg, initialValue, 255)
-        binaryImg = mpp.morphologyClose(binaryImg)
-        borderedImg = mpp.canny(binaryImg)
-        contours, hierarchy = mec.findContours(borderedImg)
+        # gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
+        # (T, binaryImg) = mpp.binaryImg(grayImg, 120, 255)
+        # binaryImg = mpp.morphologyClose(binaryImg)
+        # borderedImg = mpp.canny(binaryImg)
+        contours, hierarchy = mec.findContours(binaryImg)
         moments = mec.findMoments(binaryImg)
         (cX, cY) = mec.findCenterOfMass(moments)
-        (rows, cols) = grayImg.shape
+        (rows, cols) = binaryImg.shape
         binaryPixels = mec.findBinaryPixels(binaryImg, rows, cols)
         symmetryX = mec.findSymmetryX(binaryImg, rows, cols, cX)
         symmetryY = mec.findSymmetryY(binaryImg, rows, cols, cY)
@@ -51,19 +53,16 @@ def main():
         descriptors.append(blueVariance)
 
         print(descriptors)
-
-        grayImg = mec.drawContours(grayImg, contours, -1)
-        grayImg = mec.drawCircle(grayImg, (int(cX), int(cY)), 3)
-        grayImg = mec.drawCircle(grayImg, (int(x), int(y)), int(radius))
-        mec.show2Img(binaryImg, grayImg, 'Modulo Extrator de Caracteristicas')
-
         print('Size: %s' % (len(contours)))
-        index = int(input("Contorno: "))
-        if index != -1:
-            benign_malignant = data.readCSV(path, arquivo)
-            data.writeCSV(str(arquivo), benign_malignant, descriptors)
-        else:
-            sys.exit()
+
+        imgBGR = mec.drawContours(imgBGR, contours, -1)
+        imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
+        imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
+        mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
+        mec.showSingleImg(binaryImg, "Imagem Binarizada")
+
+        benign_malignant = data.readCSV(pathImgBGR, arquivo)
+        data.writeCSV(str(arquivo), benign_malignant, descriptors)
 
         descriptors.clear()
 
