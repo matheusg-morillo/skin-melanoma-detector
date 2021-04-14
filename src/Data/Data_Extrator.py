@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 
 
 class Data_Extrator(object):
@@ -15,18 +16,20 @@ class Data_Extrator(object):
 
             for row in csv_reader:
                 if row["name"] == imageName:
-                    return str(row["benign_malignant"])
+                    if row["benign_malignant"] == 'benign':
+                        return 0.0
+                    else:
+                        return 1.0
 
-    def writeCSV(self, imageName, benign_malignant, descriptors):
-        with open(self.path + '\\' + 'Descritores.csv',
+    def writeCSV(self, benign_malignant, descriptors):
+        with open(self.path + 'Descritores.csv',
                   'a', newline='') as csv_file:
 
-            fieldnames = ["benign_malignant", "image", "simmetryX",
+            fieldnames = ["benign_malignant", "simmetryX",
                           "simmetryY", "radius", "meanR", "varianceR", "meanG",
                           "varianceG", "meanB", "varianceB"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writerow({"benign_malignant": benign_malignant,
-                             "image": imageName,
                              "simmetryX": descriptors[0],
                              "simmetryY": descriptors[1],
                              "radius": descriptors[2],
@@ -36,3 +39,22 @@ class Data_Extrator(object):
                              "varianceG": descriptors[6],
                              "meanB": descriptors[7],
                              "varianceB": descriptors[8]})
+
+    def normalize(self):
+        df = pd.read_csv(self.path + 'Descritores.csv')
+        df2 = (df - df.min()) / (df.max() - df.min())
+        df2.to_csv(self.path + 'Dados_Processados.csv', index=False)
+
+    def imageName(self, imgProcessed, imgNotProcessed):
+        with open(self.path + 'imagens.csv',
+                  'w', newline='') as csv_file:
+            fieldnames = ["imageProcessed", "imageNotProcessed"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for nameImgProcessed in imgProcessed:
+                writer.writerow({"imageProcessed": nameImgProcessed,
+                                 "imageNotProcessed": 0})
+            for nameImgNotProcessed in imgNotProcessed:
+                writer.writerow({"imageProcessed": 0,
+                                 "imageNotProcessed": nameImgNotProcessed})
