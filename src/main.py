@@ -70,7 +70,7 @@ def main():
 
             descriptors.clear()
             imgProcessed.append(nameImg[0])
-            progress_bar(count, 15, 50)
+            progress_bar(count, 500, 50)
         else:
             imgNotProcessed.append(nameImg[0])
 
