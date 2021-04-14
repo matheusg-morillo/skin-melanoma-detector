@@ -21,12 +21,12 @@ class Data_Extrator(object):
         with open(self.path + '\\' + 'Descritores.csv',
                   'a', newline='') as csv_file:
 
-            fieldnames = ["image", "benign_malignant", "simmetryX",
+            fieldnames = ["benign_malignant", "image", "simmetryX",
                           "simmetryY", "radius", "meanR", "varianceR", "meanG",
                           "varianceG", "meanB", "varianceB"]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-            writer.writerow({"image": imageName,
-                             "benign_malignant": benign_malignant,
+            writer.writerow({"benign_malignant": benign_malignant,
+                             "image": imageName,
                              "simmetryX": descriptors[0],
                              "simmetryY": descriptors[1],
                              "radius": descriptors[2],

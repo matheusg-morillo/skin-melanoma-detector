@@ -19,8 +19,8 @@ def main():
             r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation'):
         nameImg = arquivo.split('.')
         binaryImg = mpp.openImg(
-            pathSegmentation + '\\' + str(nameImg[0]) + '.png')
-        imgBGR = mpp.openImg(pathImgBGR + '\\' + str(nameImg[0]) + '.jpg')
+            pathSegmentation + '\\' + nameImg[0] + '.png')
+        imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.jpg')
         # grayImg = mpp.bgr2Gray(binaryImg)
         # grayImg = mpp.equalizeImg(grayImg)
         # gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
@@ -55,14 +55,14 @@ def main():
         print(descriptors)
         print('Size: %s' % (len(contours)))
 
-        imgBGR = mec.drawContours(imgBGR, contours, -1)
-        imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
-        imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
-        mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
-        mec.showSingleImg(binaryImg, "Imagem Binarizada")
+        # imgBGR = mec.drawContours(imgBGR, contours, -1)
+        # imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
+        # imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
+        # mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
+        # mec.showSingleImg(binaryImg, "Imagem Binarizada")
 
-        benign_malignant = data.readCSV(pathImgBGR, arquivo)
-        data.writeCSV(str(arquivo), benign_malignant, descriptors)
+        benign_malignant = data.readCSV(pathImgBGR, nameImg[0])
+        data.writeCSV(str(nameImg[0]), benign_malignant, descriptors)
 
         descriptors.clear()
 

@@ -33,7 +33,7 @@ class Features_Extractor(object):
             else:
                 for j in range(cols):
                     x2 += binaryImg[i, j]
-        return x1 - x2
+        return abs(x1 - x2)
 
     def findSymmetryY(self, binaryImg, rows, cols, cY):
         y1 = y2 = 0
@@ -43,7 +43,7 @@ class Features_Extractor(object):
                     y1 += binaryImg[i, j]
                 else:
                     y2 += binaryImg[i, j]
-        return y1 - y2
+        return abs(y1 - y2)
 
     def findMinEnclosingCircle(self, coordinates):
         return cv2.minEnclosingCircle(coordinates)
