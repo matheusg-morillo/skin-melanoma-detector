@@ -26,8 +26,8 @@ def main():
         binaryImg = mpp.openImg(
             pathSegmentation + '\\' + nameImg[0] + '.png')
         imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.jpg')
-        binaryImg = mpp.resize(binaryImg, (400, 400))
-        imgBGR = mpp.resize(imgBGR, (400, 400))
+        binaryImg = mpp.resizeImg(binaryImg, (400, 400))
+        imgBGR = mpp.resizeImg(imgBGR, (400, 400))
         # grayImg = mpp.bgr2Gray(binaryImg)
         # grayImg = mpp.equalizeImg(grayImg)
         # gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
@@ -35,46 +35,44 @@ def main():
         # binaryImg = mpp.morphologyClose(binaryImg)
         # borderedImg = mpp.canny(binaryImg)
         contours, hierarchy = mec.findContours(binaryImg)
-        if len(contours) == 1:
-            moments = mec.findMoments(binaryImg)
-            (cX, cY) = mec.findCenterOfMass(moments)
-            (rows, cols) = binaryImg.shape
-            binaryPixels = mec.findBinaryPixels(binaryImg, rows, cols)
-            symmetryX = mec.findSymmetryX(binaryImg, rows, cols, cX)
-            symmetryY = mec.findSymmetryY(binaryImg, rows, cols, cY)
-            (x, y), radius = mec.findMinEnclosingCircle(contours[index])
-            (blueMean, greenMean, redMean) = mec.findMeanBGR(imgBGR, binaryImg,
-                                                             rows,
-                                                             cols,
-                                                             binaryPixels)
-            (blueVariance, greenVariance, redVariance) = mec.findVarianceBGR(
-                imgBGR, binaryImg, rows, cols, binaryPixels, blueMean,
-                greenMean, redMean)
 
-            descriptors.append(symmetryX)
-            descriptors.append(symmetryY)
-            descriptors.append(radius)
-            descriptors.append(redMean)
-            descriptors.append(redVariance)
-            descriptors.append(greenMean)
-            descriptors.append(greenVariance)
-            descriptors.append(blueMean)
-            descriptors.append(blueVariance)
+        moments = mec.findMoments(binaryImg)
+        (cX, cY) = mec.findCenterOfMass(moments)
+        (rows, cols) = binaryImg.shape
+        binaryPixels = mec.findBinaryPixels(binaryImg, rows, cols)
+        symmetryX = mec.findSymmetryX(binaryImg, rows, cols, cX)
+        symmetryY = mec.findSymmetryY(binaryImg, rows, cols, cY)
+        (x, y), radius = mec.findMinEnclosingCircle(contours[index])
+        (blueMean, greenMean, redMean) = mec.findMeanBGR(imgBGR, binaryImg,
+                                                         rows,
+                                                         cols,
+                                                         binaryPixels)
+        (blueVariance, greenVariance, redVariance) = mec.findVarianceBGR(
+            imgBGR, binaryImg, rows, cols, binaryPixels, blueMean,
+            greenMean, redMean)
 
-            # imgBGR = mec.drawContours(imgBGR, contours, -1)
-            # imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
-            # imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
-            # mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
-            # mec.showSingleImg(binaryImg, "Imagem Binarizada")
+        descriptors.append(symmetryX)
+        descriptors.append(symmetryY)
+        descriptors.append(radius)
+        descriptors.append(redMean)
+        descriptors.append(redVariance)
+        descriptors.append(greenMean)
+        descriptors.append(greenVariance)
+        descriptors.append(blueMean)
+        descriptors.append(blueVariance)
 
-            benign_malignant = data.readCSV(pathImgBGR, nameImg[0])
-            data.writeCSV(benign_malignant, descriptors)
+        imgBGR = mec.drawContours(imgBGR, contours, -1)
+        imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
+        imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
+        mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
+        mec.showSingleImg(binaryImg, "Imagem Binarizada")
 
-            descriptors.clear()
-            imgProcessed.append(nameImg[0])
-            progress_bar(count, 500, 50)
-        else:
-            imgNotProcessed.append(nameImg[0])
+        benign_malignant = data.readCSV(pathImgBGR, nameImg[0])
+        data.writeCSV(benign_malignant, descriptors)
+
+        descriptors.clear()
+        imgProcessed.append(nameImg[0])
+        progress_bar(count, 500, 50)
 
     data.imageName(imgProcessed, imgNotProcessed)
     data.normalize()

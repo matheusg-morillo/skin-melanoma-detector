@@ -26,3 +26,6 @@ class PreProcessing_Module(object):
 
     def canny(self, bynaryImg):
         return cv2.Canny(bynaryImg, 0, 255)
+
+    def resizeImg(self, img, size):
+        return cv2.resize(img, size, interpolation = cv2.INTER_AREA)
