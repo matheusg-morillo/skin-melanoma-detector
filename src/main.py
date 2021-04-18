@@ -26,6 +26,8 @@ def main():
         binaryImg = mpp.openImg(
             pathSegmentation + '\\' + nameImg[0] + '.png')
         imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.jpg')
+        binaryImg = mpp.resize(binaryImg, (400, 400))
+        imgBGR = mpp.resize(imgBGR, (400, 400))
         # grayImg = mpp.bgr2Gray(binaryImg)
         # grayImg = mpp.equalizeImg(grayImg)
         # gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
