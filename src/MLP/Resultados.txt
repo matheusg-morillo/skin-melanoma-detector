@@ -1,0 +1,7 @@
+Corretas: 28.00 
+Incorretas: 2.00
+Especificidade: 23.00
+Sensibilidade: 5.00
+
+Total Especificidade: 23
+Total Sensibilidade: 7

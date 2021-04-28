@@ -21,8 +21,18 @@ class Data_Extrator(object):
                     else:
                         return 1.0
 
+    def readTXT(self, imageName):
+        df = pd.read_csv(
+            r'C:\Users\rapha\Documents\PH_Database\PH2_dataset.txt', delimiter='|')
+        for i in range(len(df)):
+            if df.loc[i, "   Name "] == imageName:
+               if df.loc[i, " Clinical Diagnosis "] == 0 or df.loc[i, " Clinical Diagnosis "] == 1:
+                   return 0.0
+               else:
+                   return 1.0
+
     def writeCSV(self, benign_malignant, descriptors):
-        with open(self.path + 'Descritores.csv',
+        with open(self.path + 'Teste.csv',
                   'a', newline='') as csv_file:
 
             fieldnames = ["benign_malignant", "simmetryX",
@@ -41,9 +51,9 @@ class Data_Extrator(object):
                              "varianceB": descriptors[8]})
 
     def normalize(self):
-        df = pd.read_csv(self.path + 'Descritores.csv')
+        df = pd.read_csv(self.path + '\\Teste.csv')
         df2 = (df - df.min()) / (df.max() - df.min())
-        df2.to_csv(self.path + 'Dados_Processados.csv', index=False)
+        df2.to_csv(self.path + '\\Dados_Processados.csv', index=False)
 
     def imageName(self, imgProcessed, imgNotProcessed):
         with open(self.path + 'imagens.csv',

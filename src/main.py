@@ -9,23 +9,24 @@ def main():
     mpp = Pre_Processing_Module.PreProcessing_Module()
     mec = Features_extractor.Features_Extractor()
     data = Data_Extrator.Data_Extrator(
-        r'C:\Users\rapha\Documents\skin-melanoma-detector\src\Data\\')
+        r'Camiho para salvar os arquivos')
 
-    pathSegmentation = r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation'
-    pathImgBGR = r'C:\Users\rapha\Documents\ISIC-download'
+    pathSegmentation = r'Caminhos das Imagens binarizadas'
+    pathImgBGR = r'Caminhos das Imagens em RGB'
     descriptors = []
     index = 0
-    imgNotProcessed = []
-    imgProcessed = []
     count = 0
 
     for arquivo in os.listdir(
-            r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation'):
+            pathSegmentation):
         count += 1
-        nameImg = arquivo.split('.')
+        # nameImg = arquivo.split('_')
         binaryImg = mpp.openImg(
-            pathSegmentation + '\\' + nameImg[0] + '.png')
-        imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.jpg')
+            pathSegmentation + arquivo + '\\' + arquivo + '_lesion' +
+            '\\' + arquivo + '_lesion' + '.bmp')
+        imgBGR = mpp.openImg(pathImgBGR + arquivo + '\\' + arquivo +
+                             '_Dermoscopic_Image' + '\\' + arquivo + '.bmp')
+
         binaryImg = mpp.resizeImg(binaryImg, (400, 400))
         imgBGR = mpp.resizeImg(imgBGR, (400, 400))
         # grayImg = mpp.bgr2Gray(binaryImg)
@@ -42,7 +43,7 @@ def main():
         binaryPixels = mec.findBinaryPixels(binaryImg, rows, cols)
         symmetryX = mec.findSymmetryX(binaryImg, rows, cols, cX)
         symmetryY = mec.findSymmetryY(binaryImg, rows, cols, cY)
-        (x, y), radius = mec.findMinEnclosingCircle(contours[index])
+        (x, y), diameter = mec.findMinEnclosingCircle(contours[index])
         (blueMean, greenMean, redMean) = mec.findMeanBGR(imgBGR, binaryImg,
                                                          rows,
                                                          cols,
@@ -53,7 +54,7 @@ def main():
 
         descriptors.append(symmetryX)
         descriptors.append(symmetryY)
-        descriptors.append(radius)
+        descriptors.append(diameter)
         descriptors.append(redMean)
         descriptors.append(redVariance)
         descriptors.append(greenMean)
@@ -61,20 +62,18 @@ def main():
         descriptors.append(blueMean)
         descriptors.append(blueVariance)
 
-        imgBGR = mec.drawContours(imgBGR, contours, -1)
-        imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
-        imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
-        mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
-        mec.showSingleImg(binaryImg, "Imagem Binarizada")
+        # imgBGR = mec.drawContours(imgBGR, contours, -1)
+        # imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
+        # imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
+        # mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
+        # mec.showSingleImg(binaryImg, "Imagem Binarizada")
 
-        benign_malignant = data.readCSV(pathImgBGR, nameImg[0])
+        benign_malignant = data.readTXT(" " + arquivo + " ")
         data.writeCSV(benign_malignant, descriptors)
 
         descriptors.clear()
-        imgProcessed.append(nameImg[0])
-        progress_bar(count, 500, 50)
+        progress_bar(count, 200, 50)
 
-    data.imageName(imgProcessed, imgNotProcessed)
     data.normalize()
 
 
