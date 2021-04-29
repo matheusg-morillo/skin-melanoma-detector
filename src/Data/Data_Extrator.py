@@ -32,7 +32,7 @@ class Data_Extrator(object):
                    return 1.0
 
     def writeCSV(self, benign_malignant, descriptors):
-        with open(self.path + 'Teste.csv',
+        with open(self.path + 'Dataset_ImagensASIC.csv',
                   'a', newline='') as csv_file:
 
             fieldnames = ["benign_malignant", "simmetryX",
@@ -51,9 +51,9 @@ class Data_Extrator(object):
                              "varianceB": descriptors[8]})
 
     def normalize(self):
-        df = pd.read_csv(self.path + '\\Teste.csv')
+        df = pd.read_csv(self.path + '\\Dataset_ImagensASIC.csv')
         df2 = (df - df.min()) / (df.max() - df.min())
-        df2.to_csv(self.path + '\\Dados_Processados.csv', index=False)
+        df2.to_csv(self.path + '\\Dataset_ImagensASIC_Normalizado2.csv', index=False)
 
     def imageName(self, imgProcessed, imgNotProcessed):
         with open(self.path + 'imagens.csv',

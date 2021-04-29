@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 def train_network():
     ann = Neural_Network()
     datasetTrain, datasetTest = ann.load_data(
-        r'Path Dataset')
+        r'src\Data\Dados_Processados2.csv')
     xTrain = datasetTrain[:, 1:10]
     yTrain = datasetTrain[:, 0]
 
     model = ann.createModel()
-    history = ann.trainModel(model, xTrain, yTrain, 160)
+    history = ann.trainModel(model, xTrain, yTrain, 200)
     print(ann.evaluateModel(model, xTrain, yTrain))
 
     xTest = datasetTest[:, 1:10]

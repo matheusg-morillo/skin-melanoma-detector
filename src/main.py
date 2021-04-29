@@ -9,10 +9,10 @@ def main():
     mpp = Pre_Processing_Module.PreProcessing_Module()
     mec = Features_extractor.Features_Extractor()
     data = Data_Extrator.Data_Extrator(
-        r'Camiho para salvar os arquivos')
+        r'Caminho para salvar os dados')
 
-    pathSegmentation = r'Caminhos das Imagens binarizadas'
-    pathImgBGR = r'Caminhos das Imagens em RGB'
+    pathSegmentation = r'Caminho para as Imagens binarizadas'
+    pathImgBGR = r'Caminho para as Imagens Originais'
     descriptors = []
     index = 0
     count = 0
@@ -20,13 +20,10 @@ def main():
     for arquivo in os.listdir(
             pathSegmentation):
         count += 1
-        # nameImg = arquivo.split('_')
+        nameImg = arquivo.split('.')
         binaryImg = mpp.openImg(
-            pathSegmentation + arquivo + '\\' + arquivo + '_lesion' +
-            '\\' + arquivo + '_lesion' + '.bmp')
-        imgBGR = mpp.openImg(pathImgBGR + arquivo + '\\' + arquivo +
-                             '_Dermoscopic_Image' + '\\' + arquivo + '.bmp')
-
+            pathSegmentation + '\\' + nameImg[0] + '.bmp')
+        imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.bmp')
         binaryImg = mpp.resizeImg(binaryImg, (400, 400))
         imgBGR = mpp.resizeImg(imgBGR, (400, 400))
         # grayImg = mpp.bgr2Gray(binaryImg)
@@ -68,13 +65,35 @@ def main():
         # mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
         # mec.showSingleImg(binaryImg, "Imagem Binarizada")
 
-        benign_malignant = data.readTXT(" " + arquivo + " ")
+        benign_malignant = data.readCSV(
+            r'Caminho do CSV preparado contendo os dados', nameImg[0])
         data.writeCSV(benign_malignant, descriptors)
 
         descriptors.clear()
-        progress_bar(count, 200, 50)
+        progress_bar(count, len(os.listdir(pathSegmentation)), 50)
 
     data.normalize()
+
+
+def normalize():
+    data = Data_Extrator.Data_Extrator(
+        r'Caminho dos dados processados')
+    data.normalize()
+
+
+def convert():
+    mpp = Pre_Processing_Module.PreProcessing_Module()
+    count = 0
+    pathImg = r'Caminho das imagens'
+    pathImgBMP = r'Caminho para salavr as imagens'
+
+    for arquivo in os.listdir(
+            r'Caminho para as imagens'):
+        count += 1
+        nameImg = arquivo.split('.')
+        mpp.convertToBMP(pathImg + nameImg[0] + '.png', pathImgBMP +
+                         nameImg[0] + '.bmp')
+        progress_bar(count, len(os.listdir(pathImg)), 50)
 
 
 def progress_bar(value, max, barsize):
@@ -93,4 +112,6 @@ def progress_bar(value, max, barsize):
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    # convert()
+    normalize()

@@ -1,3 +1,4 @@
+from PIL import Image
 import cv2
 
 
@@ -29,3 +30,6 @@ class PreProcessing_Module(object):
 
     def resizeImg(self, img, size):
         return cv2.resize(img, size, interpolation=cv2.INTER_AREA)
+
+    def convertToBMP(self, pathImg, pathImgSave):
+        Image.open(pathImg).save(pathImgSave)

@@ -16,8 +16,9 @@ class Neural_Network(object):
 
     def createModel(self):
         model = Sequential()
-        model.add(Dense(8, input_dim=9, activation='relu'))
+        model.add(Dense(10, input_dim=9, activation='relu'))
         model.add(Dense(16, activation='relu'))
+        model.add(Dense(24, activation='relu'))
         model.add(Dense(1, activation='sigmoid'))
         model.compile(loss='binary_crossentropy',
                       optimizer='rmsprop', metrics=['accuracy'])

@@ -5,3 +5,5 @@ Sensibilidade: 5.00
 
 Total Especificidade: 23
 Total Sensibilidade: 7
+
+rmsprop
