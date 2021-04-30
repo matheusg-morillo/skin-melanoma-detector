@@ -1,4 +1,5 @@
 from PIL import Image
+from matplotlib import pyplot as plt
 import cv2
 
 
@@ -33,3 +34,16 @@ class PreProcessing_Module(object):
 
     def convertToBMP(self, pathImg, pathImgSave):
         Image.open(pathImg).save(pathImgSave)
+
+    def histograma(self, img):
+        return cv2.calcHist([img], [0], None, [256], [0, 256])
+
+    def plotHist(self, histograma):
+        plt.figure()
+        plt.title("Histograma")
+        plt.xlabel("Intensidade")
+        plt.ylabel("Quantidade de Pixels")
+        plt.plot(histograma)
+        plt.xlim([0, 256])
+        plt.show()
+        cv2.waitkey(0)

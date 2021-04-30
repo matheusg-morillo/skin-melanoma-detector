@@ -96,6 +96,16 @@ def convert():
         progress_bar(count, len(os.listdir(pathImg)), 50)
 
 
+def histograma():
+    mpp = Pre_Processing_Module.PreProcessing_Module()
+    mec = Features_extractor.Features_Extractor()
+    grayImg = mpp.bgr2Gray(mpp.openImg(r'Caminho da Imagem'))
+    # grayImg = mpp.resizeImg(grayImg, (400, 400))
+    mec.showSingleImg(grayImg, "Gray Image")
+    histograma = mpp.histograma(grayImg)
+    mpp.plotHist(histograma)
+
+
 def progress_bar(value, max, barsize):
     chars = int(value * barsize / float(max))
     numero = max - value
@@ -114,4 +124,5 @@ def progress_bar(value, max, barsize):
 if __name__ == "__main__":
     # main()
     # convert()
-    normalize()
+    # normalize()
+    histograma()
