@@ -29,7 +29,7 @@ class Features_Extractor(object):
         for i in range(rows):
             if i < cX:
                 for j in range(cols):
-                    x1 += binaryImg[i, j]
+                     x1 += binaryImg[i, j]
             else:
                 for j in range(cols):
                     x2 += binaryImg[i, j]
@@ -95,3 +95,6 @@ class Features_Extractor(object):
 
     def drawContours(self, img, coordinates, index):
         return cv2.drawContours(img, coordinates, index, (0, 255, 0), 3)
+
+    def save(self, nameIMG, img):
+        cv2.imwrite(nameIMG, img)

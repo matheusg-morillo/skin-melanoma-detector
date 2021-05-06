@@ -17,9 +17,9 @@ class Data_Extrator(object):
             for row in csv_reader:
                 if row["name"] == imageName:
                     if row["benign_malignant"] == 'benign':
-                        return 0.0
+                        return 0
                     else:
-                        return 1.0
+                        return 1
 
     def readTXT(self, imageName):
         df = pd.read_csv(

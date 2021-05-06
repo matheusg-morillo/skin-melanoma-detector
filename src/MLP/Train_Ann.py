@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def train_network():
     ann = Neural_Network()
     datasetTrain, datasetTest = ann.load_data(
-        r'src\Data\Dados_Processados2.csv')
+        r'C:\Users\rapha\PycharmProjects\skin-melanoma-detector\src\Data\Dataset_ASIC_Normalizado.csv')
     xTrain = datasetTrain[:, 1:10]
     yTrain = datasetTrain[:, 0]
 
@@ -55,13 +55,13 @@ def train_network():
     plt.legend(['Treino', 'Teste'], loc='upper left')
     plt.show()
     # summarize history for loss
-    plt.plot(history.history['loss'])
+    '''plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
     plt.title('Perca do Modelo')
     plt.ylabel('Perca')
     plt.xlabel('Epoca')
     plt.legend(['Treino', 'Teste'], loc='upper left')
-    plt.show()
+    plt.show()'''
 
     return (ann, model)
 

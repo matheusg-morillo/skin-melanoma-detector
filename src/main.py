@@ -8,11 +8,10 @@ import sys
 def main():
     mpp = Pre_Processing_Module.PreProcessing_Module()
     mec = Features_extractor.Features_Extractor()
-    data = Data_Extrator.Data_Extrator(
-        r'Caminho para salvar os dados')
+    data = Data_Extrator.Data_Extrator(r'C:\Users\rapha\Documents\Images_BMP\\')
 
-    pathSegmentation = r'Caminho para as Imagens binarizadas'
-    pathImgBGR = r'Caminho para as Imagens Originais'
+    pathSegmentation = r'C:\Users\rapha\Documents\Images_Seg_BMP'
+    pathImgBGR = r'C:\Users\rapha\Documents\Images_BMP'
     descriptors = []
     index = 0
     count = 0
@@ -21,11 +20,10 @@ def main():
             pathSegmentation):
         count += 1
         nameImg = arquivo.split('.')
-        binaryImg = mpp.openImg(
-            pathSegmentation + '\\' + nameImg[0] + '.bmp')
+        binaryImg = mpp.openImg(pathSegmentation + '\\' + nameImg[0] + '.bmp')
         imgBGR = mpp.openImg(pathImgBGR + '\\' + nameImg[0] + '.bmp')
-        binaryImg = mpp.resizeImg(binaryImg, (400, 400))
-        imgBGR = mpp.resizeImg(imgBGR, (400, 400))
+        binaryImg = mpp.resizeImg(binaryImg, (600, 400))
+        imgBGR = mpp.resizeImg(imgBGR, (600, 400))
         # grayImg = mpp.bgr2Gray(binaryImg)
         # grayImg = mpp.equalizeImg(grayImg)
         # gaussianBlurImg = mpp.gaussianBlur(grayImg, blur)
@@ -61,12 +59,11 @@ def main():
 
         # imgBGR = mec.drawContours(imgBGR, contours, -1)
         # imgBGR = mec.drawCircle(imgBGR, (int(cX), int(cY)), 3)
-        # imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(radius))
+        # imgBGR = mec.drawCircle(imgBGR, (int(x), int(y)), int(diameter))
         # mec.showSingleImg(imgBGR, 'Modulo Extrator de Caracteristicas')
         # mec.showSingleImg(binaryImg, "Imagem Binarizada")
 
-        benign_malignant = data.readCSV(
-            r'Caminho do CSV preparado contendo os dados', nameImg[0])
+        benign_malignant = data.readCSV(r'C:\Users\rapha\Documents\ISIC-download', nameImg[0])
         data.writeCSV(benign_malignant, descriptors)
 
         descriptors.clear()
@@ -84,15 +81,13 @@ def normalize():
 def convert():
     mpp = Pre_Processing_Module.PreProcessing_Module()
     count = 0
-    pathImg = r'Caminho das imagens'
-    pathImgBMP = r'Caminho para salavr as imagens'
+    pathImg = r'C:\Users\rapha\Documents\ISIIC_Download_Segmentation\\'
+    pathImgBMP = r'C:\Users\rapha\Documents\Images_Seg_BMP\\'
 
-    for arquivo in os.listdir(
-            r'Caminho para as imagens'):
+    for arquivo in os.listdir(r'C:\Users\rapha\Documents\Images_JPG\\'):
         count += 1
         nameImg = arquivo.split('.')
-        mpp.convertToBMP(pathImg + nameImg[0] + '.png', pathImgBMP +
-                         nameImg[0] + '.bmp')
+        mpp.convertToBMP(pathImg + nameImg[0] + '.png', pathImgBMP + nameImg[0] + '.bmp')
         progress_bar(count, len(os.listdir(pathImg)), 50)
 
 
@@ -122,7 +117,7 @@ def progress_bar(value, max, barsize):
 
 
 if __name__ == "__main__":
-    # main()
+    main()
     # convert()
     # normalize()
-    histograma()
+    # histograma()
