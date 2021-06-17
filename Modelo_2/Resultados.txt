@@ -1,9 +1,0 @@
-Corretas: 26.00 
-Incorretas: 4.00
-Especificidade: 19.00
-Sensibilidade: 7.00
-
-Total Especificidade: 21
-Total Sensibilidade: 9
-
-rmsprop

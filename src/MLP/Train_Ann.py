@@ -1,11 +1,10 @@
 from Neural_Network import Neural_Network
-import matplotlib.pyplot as plt
 
 
 def train_network():
     ann = Neural_Network()
     datasetTrain, datasetTest = ann.load_data(
-        r'C:\Users\rapha\PycharmProjects\skin-melanoma-detector\src\Data\Dataset_ASIC_Normalizado.csv')
+        r'C:\Users\Raphael Nascimento\PycharmProjects\skin-melanoma-detector\src\Data\Dataset_ISIC_Normalizado.csv', 165)
     xTrain = datasetTrain[:, 1:10]
     yTrain = datasetTrain[:, 0]
 
@@ -17,58 +16,65 @@ def train_network():
     yTest = datasetTest[:, 0]
     print(ann.evaluateModel(model, xTest, yTest))
 
-    predictions = ann.makePredictions(model, xTest)
+    predictions = ann.makePredictions_classes(model, xTest)
+
     correct = 0
     incorrect = 0
-    specificidade = 0
-    sensibilidade = 0
-    totalSpecificidade = 0
-    totalSensibilidade = 0
+    totalSpec = 0
+    totalSensi = 0
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
 
     for i in yTest:
         if i == 0:
-            totalSpecificidade += 1
+            totalSpec += 1
         else:
-            totalSensibilidade += 1
+            totalSensi += 1
 
     for i in range(len(xTest)):
         if predictions[i] == yTest[i]:
             correct += 1
-            if predictions[i] == yTest[i] and predictions[i] == 0:
-                specificidade += 1
-            elif predictions[i] == yTest[i] and predictions[i] == 1:
-                sensibilidade += 1
+            if predictions[i] == 0:
+                TN += 1
+            elif predictions[i] == 1:
+                TP += 1
         else:
             incorrect += 1
+            if predictions[i] == 0:
+                FN += 1
+            elif predictions[i] == 1:
+                FP += 1
 
-    # print('%s => %d (expected %d)' % (i, predictions[i], yTrain[i]))
-    print('Corretas: %.2f \nIncorretas: %.2f \nEspecificidade: %.2f \nSensibilidade: %.2f \n' %
-          ((correct), (incorrect), (specificidade), (sensibilidade)))
-    print('Total Especificidade: %s \nTotal Sensibilidade: %s \n' %
-          (totalSpecificidade, totalSensibilidade))
+    print('''Corretas: %s; 
+Incorretas: %s; 
+Especificidade: %s; 
+Sensibilidade: %s;
+    ''' %
+          (correct, incorrect, TN, TP))
 
-    plt.plot(history.history['accuracy'])
-    plt.plot(history.history['val_accuracy'])
-    plt.title('Acuracia do Modelo')
-    plt.ylabel('Acuracia')
-    plt.xlabel('Epoca')
-    plt.legend(['Treino', 'Teste'], loc='upper left')
-    plt.show()
-    # summarize history for loss
-    '''plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Perca do Modelo')
-    plt.ylabel('Perca')
-    plt.xlabel('Epoca')
-    plt.legend(['Treino', 'Teste'], loc='upper left')
-    plt.show()'''
+    print('Total Especificidade: %s; Total Sensibilidade: %s;' % (totalSpec, totalSensi))
 
-    return (ann, model)
+    print('''Porcentagem Especificidade: %s; 
+Porcentagem Sensibilidade: %s; 
+Porcentagem Acurácia: %s;
+    ''' %
+          (TN / totalSpec * 100, TP / totalSensi * 100, correct / len(xTest) * 100))
+    print('Especificidade: %s' % ((TN / (TN + FP)) * 100))
+    print('Sensibilidade: %s' % ((TP / (TP + FN)) * 100))
+    print('Precisão: %s' % ((TP / (TP + FP)) * 100))
+    print('Acurácia: %s' % (((TP + TN) / (TP + TN + FP + FN)) * 100))
+
+    predictions_ravel = ann.make_predictions_ravel(model, xTest)
+    ann.roc_curve(predictions_ravel, yTest)
+
+    return ann, model
 
 
 def save_ann(ann, model):
-    salvar = int(input("Salvar a Rede: "))
-    if salvar == 1:
+    save = int(input("Salvar a Rede: "))
+    if save == 1:
         print(ann.export_model(model))
     else:
         print('Finish')
