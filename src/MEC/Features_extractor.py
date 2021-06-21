@@ -3,29 +3,6 @@ import cv2
 
 
 class Features_Extractor(object):
-    def __init__(self, pathImg):
-        self.pathImg = pathImg
-
-    def openImg(self):
-        return cv2.imread(self.pathImg)
-
-    def bgr2Gray(self, imageBgr):
-        return cv2.cvtColor(imageBgr, cv2.COLOR_BGR2GRAY)
-
-    def gaussianBlur(self, imgGray, gaussianValue):
-        return cv2.GaussianBlur(imgGray, gaussianValue, 0)
-
-    def binaryImg(self, imgBlur, initialValue, limitValue):
-        return cv2.threshold(imgBlur, initialValue, limitValue,
-                             cv2.THRESH_BINARY_INV)
-
-    def morphologyClose(self, binaryImg):
-        return cv2.morphologyEx(binaryImg, cv2.MORPH_CLOSE,
-                                cv2.getStructuringElement(cv2.MORPH_RECT,
-                                                          (5, 5)))
-
-    def canny(self, bynaryImg):
-        return cv2.Canny(bynaryImg, 0, 255)
 
     def findContours(self, cannyImg):
         return cv2.findContours(cannyImg, cv2.RETR_TREE,
@@ -52,11 +29,11 @@ class Features_Extractor(object):
         for i in range(rows):
             if i < cX:
                 for j in range(cols):
-                    x1 += binaryImg[i, j]
+                     x1 += binaryImg[i, j]
             else:
                 for j in range(cols):
                     x2 += binaryImg[i, j]
-        return x1 - x2
+        return abs(x1 - x2)
 
     def findSymmetryY(self, binaryImg, rows, cols, cY):
         y1 = y2 = 0
@@ -66,7 +43,7 @@ class Features_Extractor(object):
                     y1 += binaryImg[i, j]
                 else:
                     y2 += binaryImg[i, j]
-        return y1 - y2
+        return abs(y1 - y2)
 
     def findMinEnclosingCircle(self, coordinates):
         return cv2.minEnclosingCircle(coordinates)
@@ -118,3 +95,6 @@ class Features_Extractor(object):
 
     def drawContours(self, img, coordinates, index):
         return cv2.drawContours(img, coordinates, index, (0, 255, 0), 3)
+
+    def save(self, nameIMG, img):
+        cv2.imwrite(nameIMG, img)
